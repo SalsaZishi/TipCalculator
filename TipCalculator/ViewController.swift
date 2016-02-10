@@ -61,19 +61,18 @@ class ViewController: UIViewController {
         }
     }
     
-    // Makes sure there are 1 or 2 numbers after the decimal place
+    // Makes sure there are 1 or 2 numbers after the decimal place, or the number has no decimal place to begin with
     func isValidBill(bill: String) -> Bool {
         if let range: Range<String.Index> = bill.rangeOfString(".") {
             let decimal_index: Int = bill.startIndex.distanceTo(range.startIndex)
             
-            // last char in string must be 1 or 2 indices after decimal_index
+            // last char in string must be 1 or 2 indices after decimal place index
             let dif = (bill.characters.count - 1) - decimal_index
             if (dif == 1 || dif == 2) {
                 return true
             }
             return false
         }
-        
         // no '.'? return true
         return true
     }
