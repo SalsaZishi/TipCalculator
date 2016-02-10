@@ -42,7 +42,8 @@ class ViewController: UIViewController {
         if let _ = Float(billAmount.text!) {
             
             if !(isValidBill(billAmount.text!)) {
-                instructions.text = "Enter 1 or 2 numbers after decimal place:"
+                clearCalculations()
+                instructions.text = "1 or 2 numbers after decimal place"
                 return
             }
             let decimal_100 = NSDecimalNumber(string: "100.0")
@@ -57,6 +58,7 @@ class ViewController: UIViewController {
             totalAmount.text = formatAsCurrency(decimal_total)
         }
         else {
+            clearCalculations()
             instructions.text = "Please enter a valid numerical bill: "
         }
     }
@@ -83,6 +85,12 @@ class ViewController: UIViewController {
         formatter.locale = NSLocale.currentLocale()
         formatter.numberStyle = NSNumberFormatterStyle.CurrencyStyle
         return formatter.stringFromNumber(decimal_number)!
+    }
+    
+    // clear tip and total values so calculations from previous valid calculations don't linger after user inputs invalid bill
+    func clearCalculations() {
+        tipAmount.text = ""
+        totalAmount.text = ""
     }
     
     override func viewDidLoad() {
