@@ -37,14 +37,9 @@ class ViewController: UIViewController {
     
     // gets bill amount and tip rate, converts to NSDecimalNumber, and calculates the tip and total
     @IBAction func calculatePay(sender: UIButton) {
-        
-        //NSRange range = NSMakeRange(0, [billAmount.text, length]);
-        
+
         // first check if user entered a numerical or not
-       // if !(isTextFieldNumeric(billAmount, shouldChangeCharactersInRange: range, replacementString: billAmount.text!)) {
-           // billAmount.text = "Please enter a numerical value:"
-       // }
-        // else {
+        if let _ = Float(billAmount.text!) {
             // get decimal values of bill and tip rate
             let decimal_100 = NSDecimalNumber(string: "100.0")
             let decimal_bill = NSDecimalNumber(string: billAmount.text)
@@ -56,30 +51,13 @@ class ViewController: UIViewController {
             let decimal_total = decimal_bill.decimalNumberByAdding(decimal_tipAmount)
             tipAmount.text = formatAsCurrency(decimal_tipAmount)
             totalAmount.text = formatAsCurrency(decimal_total)
-       // }
-    }
-    
-    // checks if string that user inputted in billAmount text field is non-numeric,
-    // returns false if so, otherwise return true
-    func isTextFieldNumeric(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        // Thanks to Roman Sausarnes http://stackoverflow.com/questions/27697508/nscharacterset-characterismember-with-swifts-character-type
-        // need to convert characters in string to an array of unichars that can be compared to NSCharacterSet
-        var codeUnits = [unichar]()
-        for codeUnit in string.utf16 {
-            codeUnits.append(codeUnit)
         }
+        else {
+            print("Not a number")
+            // billAmount.text = "Enter a valid number: "
+        }
+    }
 
-        // Thanks to ndmeiri for function that checks if text is non-numeric:
-        // http://stackoverflow.com/questions/30973044/how-to-restrict-uitextfield-to-take-only-numbers-in-swift?lq=1
-        let digits = NSCharacterSet.decimalDigitCharacterSet()
-        for c in codeUnits {
-            if !digits.characterIsMember(c) {
-                return false
-            }
-        }
-        return true
-    }
-    
     // convert decimal number to currency format
     func formatAsCurrency(decimal_number: NSNumber) -> String {
         let formatter = NSNumberFormatter()
