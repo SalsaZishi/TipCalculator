@@ -26,7 +26,7 @@ class ViewController: UIViewController {
     
     // bill amount + tipAmount using NSDecimal
     @IBOutlet weak var totalAmount: UILabel!
-
+    
     @IBOutlet weak var tipRateSlider: UISlider!
     
     // changes tipRate label based on slider
@@ -37,27 +37,43 @@ class ViewController: UIViewController {
     
     // gets bill amount and tip rate, converts to NSDecimalNumber, and calculates the tip and total
     @IBAction func calculatePay(sender: UIButton) {
-
-        // first check if user entered a numerical or not
+        
+        // first check if we are dealing with a number
         if let _ = Float(billAmount.text!) {
-            // get decimal values of bill and tip rate
+            
+            if !(isValidBill(billAmount.text!)) {
+                instructions.text = "Enter 1 or 2 numbers after decimal place:"
+                return
+            }
             let decimal_100 = NSDecimalNumber(string: "100.0")
             let decimal_bill = NSDecimalNumber(string: billAmount.text)
             let sliderRate = NSDecimalNumber(integer: Int(tipRateSlider.value))
             let decimal_tipRate = sliderRate.decimalNumberByDividingBy(decimal_100)
         
             // calculate decimal values for tip and total, then update labels
-            let decimal_tipAmount = decimal_bill.decimalNumberByMultiplyingBy(decimal_tipRate)
+            let decimal_tipAmount = decimal_bill.decimalNumberByMultiplyingBy   (decimal_tipRate)
             let decimal_total = decimal_bill.decimalNumberByAdding(decimal_tipAmount)
             tipAmount.text = formatAsCurrency(decimal_tipAmount)
             totalAmount.text = formatAsCurrency(decimal_total)
         }
         else {
-            print("Not a number")
-            // billAmount.text = "Enter a valid number: "
+            instructions.text = "Please enter a valid numerical bill: "
         }
     }
-
+    
+    // Makes sure there are 1 or 2 numbers after the decimal place
+    func isValidBill(bill: String) -> Bool {
+        let range: Range<String.Index> = bill.rangeOfString(".")!
+        let decimal_index: Int = bill.startIndex.distanceTo(range.startIndex)
+        
+        // last char in string must be 1 or 2 indices after decimal_index
+        let dif = (bill.characters.count - 1) - decimal_index
+        if (dif == 1 || dif == 2) {
+            return true
+        }
+        return false
+    }
+    
     // convert decimal number to currency format
     func formatAsCurrency(decimal_number: NSNumber) -> String {
         let formatter = NSNumberFormatter()
@@ -71,10 +87,9 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         billAmount.becomeFirstResponder()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 }
-
